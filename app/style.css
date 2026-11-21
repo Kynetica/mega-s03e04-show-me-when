@@ -20,3 +20,10 @@ footer { color: #777; font-size: 13px; }
 .row .acked { color: #0a7d32; font-weight: 600; }
 .row.is-acked { background: #f3faf5; }
 footer code { font-family: ui-monospace, monospace; }
+.confirm { position: fixed; z-index: 10; left: 50%; top: 96px; transform: translateX(-50%); width: min(440px, calc(100vw - 32px)); background: #fff; border: 1px solid #1d1d1f; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.18); padding: 16px 18px; }
+.confirm-text { margin: 0 0 12px; font-size: 17px; }
+.confirm-id { font-family: ui-monospace, monospace; }
+.confirm-what { display: block; margin-top: 4px; font-size: 14px; color: #555; }
+.confirm-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.confirm button { font: inherit; padding: 6px 16px; border: 1px solid #1d1d1f; border-radius: 6px; background: #fff; cursor: pointer; }
+.confirm button.primary { background: #1d1d1f; color: #fff; }

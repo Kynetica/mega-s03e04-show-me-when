@@ -72,23 +72,51 @@ function render(incidents) {
   list.hidden = sorted.length === 0;
 }
 
-// R2: Ack sends the ack for that row's incident and marks the row.
-list.addEventListener('click', async (e) => {
+// R2 (product, after SCHED-4511 step 1): Ack asks to confirm, and the confirm names the incident id.
+// The id is taken from the row at click time and held by the confirm, so a row that moved under the
+// pointer shows up as the wrong id before anything is sent.
+const confirmBox = document.querySelector('[data-testid="confirm"]');
+const confirmText = confirmBox.querySelector('.confirm-text');
+const confirmAck = confirmBox.querySelector('[data-testid="confirm-ack"]');
+const confirmCancel = confirmBox.querySelector('[data-testid="confirm-cancel"]');
+let confirming = null; // { id, summary }
+
+function openConfirm(id, summary) {
+  confirming = { id };
+  confirmText.innerHTML = `Ack <strong class="confirm-id">${esc(id)}</strong>?<span class="confirm-what">${esc(summary)}</span>`;
+  confirmBox.hidden = false;
+  confirmAck.focus();
+}
+function closeConfirm() {
+  confirming = null;
+  confirmBox.hidden = true;
+}
+
+list.addEventListener('click', (e) => {
   const btn = e.target.closest('[data-testid="ack"]');
   if (!btn) return;
   const li = btn.closest('[data-testid="incident-row"]');
-  const id = li.dataset.id;
+  openConfirm(li.dataset.id, li.querySelector('.what')?.textContent ?? '');
+});
+
+confirmCancel.addEventListener('click', closeConfirm);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && confirming) closeConfirm(); });
+
+confirmAck.addEventListener('click', async () => {
+  if (!confirming) return;
+  const { id } = confirming;
+  closeConfirm();
   pending.add(id);
-  btn.disabled = true;
+  const row = () => list.querySelector(`[data-testid="incident-row"][data-id="${CSS.escape(id)}"]`);
+  if (row()) renderAction(row(), id);
   try {
     const reply = await ack(id);
     acked.set(id, reply.ackedAt);
   } catch (err) {
     console.error(err);
-    btn.title = String(err.message || err);
   } finally {
     pending.delete(id);
-    renderAction(li, id);
+    if (row()) renderAction(row(), id);
   }
 });
 
