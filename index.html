@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="build" content="8fdc38d9beb14c5a56de42c2e8b1813bfa4936f2" />
+    <title>sched-prod · incidents</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>incidents</h1>
+      <p class="sub">sched-prod · tonight <span class="updated"></span></p>
+    </header>
+    <main data-testid="board">
+      <div data-testid="loader" class="loader" role="status" aria-live="polite"><span class="spin"></span> Loading incidents…</div>
+      <p data-testid="empty" class="empty" hidden>No incidents tonight.</p>
+      <ul data-testid="incident-list" class="list" hidden></ul>
+      <div data-testid="confirm" class="confirm" role="alertdialog" aria-modal="false" aria-labelledby="confirm-text" hidden>
+        <p id="confirm-text" class="confirm-text"></p>
+        <div class="confirm-actions">
+          <button type="button" data-testid="confirm-cancel">Cancel</button>
+          <button type="button" data-testid="confirm-ack" class="primary">Ack</button>
+        </div>
+      </div>
+    </main>
+    <footer>sched-prod incident board · build <code data-testid="build-sha">8fdc38d9beb14c5a56de42c2e8b1813bfa4936f2</code></footer>
+  </body>
+</html>
